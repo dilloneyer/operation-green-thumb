@@ -3,8 +3,9 @@
 ######################### While We Import Things ########################
 #########################################################################
 
-#Importing tkinter, messages, <OTHER FILES IN MODULE HERE>
+#Importing tkinter, messages, pillow, <OTHER FILES IN MODULE HERE>
 from tkinter import *
+from PIL import ImageTk, Image
 import tkinter.messagebox
 
 #########################################################################
@@ -22,9 +23,21 @@ class toolbarInit:
         self.toolBar = Frame(window, bg="gainsboro")
         self.toolBar.pack(side=TOP, fill=X)
 
-    def addBtn(self, btnName, frame):
-        self.toolButton = Button(self.toolBar, text=btnName, command= lambda: mainSet(frame))
-        self.toolButton.pack(side=LEFT, padx=2, pady=2)
+    def addBtn(self, frame):
+        homePhoto = photoInit("home.png", 25, 25)
+        self.toolHome = Button(self.toolBar, image=homePhoto, command= lambda: mainSet(frame))
+        self.toolHome.pack(side=LEFT, padx=2, pady=2)
+        self.toolHome.image = homePhoto
+        settingPhoto = photoInit("settings.png", 25, 25)
+        self.toolSetting = Button(self.toolBar, image = settingPhoto)
+        self.toolSetting.image = settingPhoto
+        self.toolSetting.pack(side=LEFT, padx=2, pady=2)
+
+def photoInit(fileName, sizex, sizey):
+        rawPhoto = Image.open(fileName)
+        rsizePhoto = rawPhoto.resize((sizex, sizey), Image.ANTIALIAS)
+        newPhoto = ImageTk.PhotoImage(rsizePhoto)
+        return newPhoto
 
 def mainSet(frame):
     for widget in frame.winfo_children():
@@ -40,11 +53,11 @@ def btn1Set(frame):
 
 def mainWidgetInit(frame):
     btnTopLeft = Button(frame, text="Operation", command= lambda: btn1Set(frame))
-    btnTopLeft.grid(row=0, column=0)
-    btnTopMid = Button(frame, text="Button 2")
-    btnTopMid.grid(row=0, column=1)
+    btnTopLeft.grid(row=0, column=0, padx=5, pady=(150, 5))
+    btnTopMid = Button(frame, text="Monitor")
+    btnTopMid.grid(row=0, column=1, padx=5, pady=(150, 5))
     btnTopRight = Button(frame, text="Button 3")
-    btnTopRight.grid(row=0, column=2)
+    btnTopRight.grid(row=0, column=2, padx=5, pady=(150, 5))
     btnBotLeft = Button(frame, text="Button 4")
     btnBotLeft.grid(row=1, column=0)
     btnBotMid = Button(frame, text="Button 5")
@@ -55,9 +68,12 @@ def mainWidgetInit(frame):
 
 
 # Application Runtime
-window = Tk("Operation Green Thumb")
+window = Tk()
+window.geometry("800x600")
+window.title("Operation Green Thumb")
 globalFrame = Frame(window, relief=SUNKEN)
-toolBar = toolbarInit(window).addBtn("Home", globalFrame)
+toolBar = toolbarInit(window).addBtn(globalFrame)
+
 globalFrame.pack()
 
 #window.attributes('-fullscreen', True) # **Note** Fullscreen command for windows
